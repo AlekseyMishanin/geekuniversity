@@ -1,0 +1,70 @@
+#btn1{
+     -fx-background-image: url(button1.jpg) white;
+     -fx-background-size: stretch;
+}
+#btn1:hover{
+    -fx-opacity: 0.5;
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+}
+#btnClose{
+    -fx-background-color: transparent;
+}
+#textArea{
+    -fx-wrap-text: true;
+    -fx-background-color: transparent;
+}
+#textArea .content {
+    -fx-background-color: white;
+    -fx-background-size: contain;
+}
+#paneImage {
+    -fx-background-size: stretch;
+    -fx-background-image: url(dop3.jpg);
+}
+
+#root {
+    -fx-border-style: none;
+}
+#gif{
+    -fx-image: url(animation.gif);
+    -fx-effect: dropshadow(three-pass-box, black, 50, 0.2, 10, 5);
+}
+#textField{
+    -fx-background-color: transparent;
+}
+.label{
+    -fx-font-size: 11;
+    -fx-wrap-text: true;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: dashed;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 0 5;
+    -fx-background-color: #f0f8ff;
+}
+#scrollpane{
+    -fx-background-radius: 40;
+    -fx-border-radius: 40;
+}
+
+#scrollpane .viewport{
+    -fx-background-radius: 40;
+    -fx-border-radius: 40;
+    -fx-background-image: url(fon4.jpg);
+    -fx-background-size: stretch;
+    -fx-fit-to-width: true;
+}
+
+#vbox {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: transparent;
+}
+.menu-bar {
+    -fx-background-color: transparent;
+}
+.menu{
+    -fx-background-color: transparent;
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.CheckMenuItem?>
+<BorderPane fx:id="borderpane"
+            fx:controller="javacoreadvanced.lesson4.controller.Controller"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@/style.css">
+<padding>
+    <!--Делаем отступ по краям панели, чтобы коррекно отрисовалась пользовательская рамка-->
+    <Insets left="85" right="85" top="60" bottom="60"></Insets>
+</padding>
+<style>
+    -fx-background-image: url(border6.png) white;
+    -fx-background-size: stretch;
+</style>
+<top>
+    <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+        <Menu text="Действия">
+            <MenuItem fx:id="menuAuthorization" text="Авторизоваться"/>
+            <MenuItem fx:id="menuRegistration" text="Зарегистрироваться"/>
+            <MenuItem fx:id="menuList" text="Показать онлайн"/>
+            <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat"/>
+        </Menu>
+        <Menu text="Настройки">
+            <CheckMenuItem fx:id="menuAnimation" text="Анимация" onAction="#seeOrHiddenAnimation"/>
+            <CheckMenuItem fx:id="menuSound" text="Sound" onAction="#playSound"/>
+        </Menu>
+    </MenuBar>
+</top>
+<center>
+    <VBox alignment="CENTER">
+        <children>
+            <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS" alignment="CENTER">
+                <ScrollPane fx:id="scrollpane" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="vbox" spacing="3"></VBox>
+                </ScrollPane>
+            </StackPane>
+          <HBox fx:id="chatBox" visible="true" managed="true">
+              <TextField fx:id="textField" onAction="#sendWsg" HBox.hgrow="ALWAYS" promptText="Введите сообщение..." ></TextField>
+              <Button onAction="#sendWsg"  fx:id="btn1" prefWidth="40"></Button>
+          </HBox>
+          <ImageView fx:id="gif" visible="false" managed="false"></ImageView>
+        </children>
+    </VBox>
+</center>
+</BorderPane>
