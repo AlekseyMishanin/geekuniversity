@@ -1,14 +1,12 @@
 #btn1{
-     -fx-background-image: url(button1.jpg) white;
+     -fx-background-image: url(button1.jpg);
      -fx-background-size: stretch;
+     -fx-cursor: hand;
 }
-#btn1:hover{
+#btn1:pressed{
     -fx-opacity: 0.5;
     -fx-scale-x: 1.5;
     -fx-scale-y: 1.5;
-}
-#btnClose{
-    -fx-background-color: transparent;
 }
 #textArea{
     -fx-wrap-text: true;
@@ -18,11 +16,6 @@
     -fx-background-color: white;
     -fx-background-size: contain;
 }
-#paneImage {
-    -fx-background-size: stretch;
-    -fx-background-image: url(dop3.jpg);
-}
-
 #root {
     -fx-border-style: none;
 }
@@ -47,24 +40,52 @@
 #scrollpane{
     -fx-background-radius: 40;
     -fx-border-radius: 40;
+    -fx-effect: dropshadow(gaussian, lightsteelblue, 20, 0.2, 15, 15);
 }
 
 #scrollpane .viewport{
     -fx-background-radius: 40;
     -fx-border-radius: 40;
-    -fx-background-image: url(fon4.jpg);
+    -fx-background-color: image-pattern("fon4.jpg");
     -fx-background-size: stretch;
     -fx-fit-to-width: true;
+    -fx-cursor: move;
 }
-
-#vbox {
+.scroll-bar:vertical{
+    -fx-background-color: transparent;
+    -fx-padding: 20 0 20 0;
+}
+.scroll-bar:vertical .thumb{
+    -fx-background-color: lightskyblue;
+}
+.scroll-bar:vertical .decrement-button{
+    visibility: collapse;
+ }
+.scroll-bar:vertical .increment-button{
+    visibility: collapse;
+ }
+#vbox{
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: transparent;
 }
-.menu-bar {
+.menu-bar{
     -fx-background-color: transparent;
 }
 .menu{
     -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-blend-mode: multiply;
+}
+.menu .label{
+    -fx-text-fill: black;
+}
+.menu .context-menu{
+    -fx-background-color: transparent;
+}
+.menu-item .label{
+    -fx-text-fill: black;
+}
+.menu-item:hover {
+    -fx-cursor: hand;
 }

@@ -21,16 +21,17 @@
     <Insets left="85" right="85" top="60" bottom="60"></Insets>
 </padding>
 <style>
+    <!--Вставляем рисунок в качестве фона-->
     -fx-background-image: url(border6.png) white;
     -fx-background-size: stretch;
 </style>
 <top>
-    <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+    <MenuBar fx:id="menuBar">
         <Menu text="Действия">
             <MenuItem fx:id="menuAuthorization" text="Авторизоваться"/>
             <MenuItem fx:id="menuRegistration" text="Зарегистрироваться"/>
             <MenuItem fx:id="menuList" text="Показать онлайн"/>
-            <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat"/>
+            <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat" accelerator="Esc"/>
         </Menu>
         <Menu text="Настройки">
             <CheckMenuItem fx:id="menuAnimation" text="Анимация" onAction="#seeOrHiddenAnimation"/>
@@ -39,11 +40,18 @@
     </MenuBar>
 </top>
 <center>
-    <VBox alignment="CENTER">
+    <VBox alignment="CENTER" spacing="3" BorderPane.alignment="CENTER">
         <children>
-            <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS" alignment="CENTER">
-                <ScrollPane fx:id="scrollpane" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="vbox" spacing="3"></VBox>
+            <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS" prefWidth="Infinity">
+                <padding>
+                    <Insets left="0" right="0" top="10" bottom="10"></Insets>
+                </padding>
+                <ScrollPane fx:id="scrollpane" styleClass="edge-to-edge" VBox.vgrow="ALWAYS" pannable="true">
+                    <VBox fx:id="vbox" spacing="3" VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets left="15" right="15" top="15" bottom="15"></Insets>
+                        </padding>
+                    </VBox>
                 </ScrollPane>
             </StackPane>
           <HBox fx:id="chatBox" visible="true" managed="true">

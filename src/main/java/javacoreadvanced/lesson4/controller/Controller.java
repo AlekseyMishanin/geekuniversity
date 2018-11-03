@@ -2,6 +2,7 @@ package javacoreadvanced.lesson4.controller;
 
 import javacoreadvanced.lesson4.bot.Bot;
 import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,8 +102,6 @@ public class Controller {
         label.setMaxWidth(Math.min(width+10, 180));
         //разрешить содержимому объекта отображаться на нескольких строках
         label.setWrapText(true);
-        //показать анимацию
-        playAnimation(label);
         //создаем локальный контейнер HBox
         HBox lHbox = new HBox();
         //выравнивание компонентов в контейнере
@@ -111,6 +110,8 @@ public class Controller {
         lHbox.setSpacing(2);
         //добавляем в контейнер компонены
         lHbox.getChildren().addAll(new ImageView(youImageAvatar),label);
+        //показать анимацию
+        playAnimation(lHbox);
         //добавить объект в контейнер
         Platform.runLater(() -> vbox.getChildren().add(lHbox));
     }

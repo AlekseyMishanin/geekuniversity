@@ -39,7 +39,7 @@ public class Bot {
         //Setting the node for the transition
         translateTransition.setNode(node);
         //Setting the value of the transition along the x axis.
-        translateTransition.setByX(160);
+        translateTransition.setByX(140);
         //Setting the cycle count for the transition
         translateTransition.setCycleCount(1);
         //Setting auto reverse value to false
