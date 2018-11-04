@@ -1,5 +1,7 @@
 #btn1{
-     -fx-background-image: url(button1.jpg);
+     -fx-background-color: image-pattern("button2.jpg");
+     -fx-background-radius: 40;
+         -fx-border-radius: 40;
      -fx-background-size: stretch;
      -fx-cursor: hand;
 }
