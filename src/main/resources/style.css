@@ -57,6 +57,20 @@
     -fx-background-color: transparent;
     -fx-padding: 20 0 20 0;
 }
+
+.list-view {
+    -fx-background-radius: 40;
+    -fx-border-radius: 40;
+    -fx-effect: dropshadow(gaussian, lightsteelblue, 20, 0.2, 15, 15);
+    -fx-background-color: image-pattern("fon4.jpg");
+    -fx-background-size: stretch;
+    -fx-fit-to-width: true;
+    -fx-cursor: move;
+}
+.list-view .virtual-flow .clipped-container .cell.indexed-cell.list-cell{
+    -fx-background-color: transparent;
+}
+
 .scroll-bar:vertical .thumb{
     -fx-background-color: lightskyblue;
 }

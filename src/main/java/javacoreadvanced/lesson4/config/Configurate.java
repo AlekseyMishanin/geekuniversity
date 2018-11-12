@@ -1,25 +1,25 @@
-package javacoreadvanced.lesson6.config;
+package javacoreadvanced.lesson4.config;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class Configuration {
+public class Configurate {
 
-    private static int potr;
     private static InetAddress inetAddress;
-
-    public static int getPotr() {
-        return potr;
-    }
+    private static int port;
 
     public static InetAddress getInetAddress() {
         return inetAddress;
     }
 
+    public static int getPort() {
+        return port;
+    }
+
     public static void initialise(){
-        potr = 8081;
         try {
             inetAddress = InetAddress.getLocalHost();
+            port = 8050;
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

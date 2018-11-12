@@ -1,11 +1,12 @@
-package javacoreadvanced.lesson4.controller;
+package javacoreadvanced.lesson4.client.controller;
 
 import javacoreadvanced.lesson4.bot.Bot;
+import javacoreadvanced.lesson4.config.Configurate;
 import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -19,9 +20,10 @@ import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Class Controller
@@ -29,37 +31,85 @@ import java.io.IOException;
  * */
 public class Controller {
 
-    @FXML
-    VBox vbox;
+    @FXML Button btn1;
+    @FXML Button btnAuth;
+    @FXML TextField textField;
+    @FXML TextField loginField;
+    @FXML PasswordField passField;
+    @FXML ImageView gif;
+    @FXML Pane paneImage;
+    @FXML CheckMenuItem menuSound;
+    @FXML CheckMenuItem menuAnimation;
+    @FXML ListView<HBox> listchat;
+    @FXML HBox authBox;
+    @FXML HBox chatBox;
 
-    @FXML
-    Button btn1;
-
-    @FXML
-    TextField textField;
-
-    @FXML
-    ScrollPane scrollpane;
-
-    @FXML
-    ImageView gif;
-
-    @FXML
-    Pane paneImage;
-
-    @FXML
-    CheckMenuItem menuSound;
-
-    @FXML
-    CheckMenuItem menuAnimation;
-
-    private boolean flagInit = false;       //флаг выполнения блока инициализации
+    private enum TypePerson {FIRSTPERSON, SECONDPERSON, SYSTEMPERSON}
     private Image youImageAvatar;           //изображение используемое в качестве аватара
+    final private Image avatarSecondPerson = new Image("ava6.jpg",20,20,true,true); //изображение используемое в качестве аватара
+    final private Image avatarSystemPerson = new Image("ava4.jpg",20,20,true,true); //изображение используемое в качестве аватара
     final private Bot bot = new Bot();      //собеседник бот
     private FileInputStream stream = null;  //поток ввода звукового файла
     private Player player = null;           //переменная для проигрывания содержимого звукового файла
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private boolean authorise = false;
+    private String nick = null;
 
+    public void connect() {
 
+        youImageAvatar = new Image("ava5.jpg",20,20,true,true);     //по url загружаем изображение
+        Configurate.initialise();
+        try {
+            socket = new Socket(Configurate.getInetAddress().getHostName(),Configurate.getPort());
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (true){
+                            String str = in.readLine();
+                            if(str.startsWith("/authok")) {
+                                String[] tokens = str.split(" ");
+                                nick = tokens[1];
+                                setAuthorise(true);
+                                break;
+                            }
+                            if(str.startsWith("/system ")) {
+                                String[] tokens = str.split(" ", 2);
+                                createLabelForChat(tokens[1], TypePerson.SYSTEMPERSON);
+                            }
+                        }
+                        while (true){
+                            String str = in.readLine();
+                            if(str.equals("/serverClose")) break;
+                            if(str.startsWith(nick)) {createLabelForChat(str,TypePerson.FIRSTPERSON);}
+                            else {
+                                if(str.startsWith("/system ")) {
+                                    String[] tokens = str.split(" ", 2);
+                                    createLabelForChat(tokens[1], TypePerson.SYSTEMPERSON);
+                                }
+                                else {createLabelForChat(str,TypePerson.SECONDPERSON);}
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        setAuthorise(false);
+                    }
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Метод показывает анимацию узла
@@ -87,7 +137,7 @@ public class Controller {
      * Далее контейнер HBox вставляется в контейнер VBox
      * @param str - текс сообщения
      * */
-    private void createLabelForChat(final String str){
+    private void createLabelForChat(final String str, TypePerson type){
         //если входная строка пуста, выходим из метода
         if (str.isEmpty()) return;
         //создаем объект типа Label
@@ -104,16 +154,27 @@ public class Controller {
         label.setWrapText(true);
         //создаем локальный контейнер HBox
         HBox lHbox = new HBox();
-        //выравнивание компонентов в контейнере
-        lHbox.setAlignment(Pos.TOP_LEFT);
         //расстояние между компонентами (пробел)
         lHbox.setSpacing(2);
-        //добавляем в контейнер компонены
-        lHbox.getChildren().addAll(new ImageView(youImageAvatar),label);
+        //выравнивание компонентов в контейнере //добавляем в контейнер компонены
+        switch (type) {
+            case FIRSTPERSON:
+                lHbox.setAlignment(Pos.TOP_LEFT);
+                lHbox.getChildren().addAll(new ImageView(youImageAvatar), label);
+                break;
+            case SECONDPERSON:
+                lHbox.setAlignment(Pos.TOP_RIGHT);
+                lHbox.getChildren().addAll(label, new ImageView(avatarSecondPerson));
+                break;
+            case SYSTEMPERSON:
+                lHbox.setAlignment(Pos.TOP_CENTER);
+                lHbox.getChildren().addAll(new ImageView(avatarSystemPerson), label);
+                break;
+        }
         //показать анимацию
         playAnimation(lHbox);
-        //добавить объект в контейнер
-        Platform.runLater(() -> vbox.getChildren().add(lHbox));
+        Platform.runLater(() -> {listchat.getItems().add(lHbox); listchat.scrollTo(listchat.getItems().size()-1);});
+
     }
 
     /**
@@ -121,9 +182,7 @@ public class Controller {
      * текстового поля.
      * */
     public void sendWsg(){
-        if(!flagInit) {initialisation();}
-        createLabelForChat(textField.getText());
-        bot.createLabelForChat(vbox);
+        out.println(textField.getText());
         textField.clear();
         textField.requestFocus();
     }
@@ -152,18 +211,6 @@ public class Controller {
             paneImage.setVisible(true);
             paneImage.setManaged(true);
         }
-    }
-
-    /**
-     * Блок инициализации
-     * */
-    private void initialisation(){
-
-        //по url загружаем изображение
-        youImageAvatar = new Image("ava5.jpg",20,20,true,true);
-        //автоматическая прокрутка scrollpane при добавлении нового объекта в vbox
-        vbox.heightProperty().addListener((observable)->scrollpane.setVvalue(1D));
-        flagInit = true;
     }
 
     /**
@@ -197,5 +244,25 @@ public class Controller {
      * */
     public void closeChat(){Runtime.getRuntime().exit(0);}
 
+    public void setAuthorise(boolean isAuthorise){
+        this.authorise = isAuthorise;
+        if(authorise){
+            authBox.setVisible(false);
+            authBox.setManaged(false);
+            chatBox.setVisible(true);
+            chatBox.setManaged(true);
+        } else {
+            authBox.setVisible(true);
+            authBox.setManaged(true);
+            chatBox.setVisible(false);
+            chatBox.setManaged(false);
+        }
+    }
 
+    public void tryToAuth(ActionEvent actionEvent) {
+        if(socket==null||socket.isClosed()) connect();
+        out.println("/auth " + loginField.getText() + " " + passField.getText());
+        loginField.clear();
+        passField.clear();
+    }
 }
