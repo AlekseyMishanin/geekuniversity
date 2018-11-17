@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import java.util.Random;
 /**
  * @author - Mishanin Aleksey
+ * Класс бота, отправляющего случайные автоматические ответы
  * */
 public class Bot {
 

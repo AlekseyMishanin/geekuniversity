@@ -5,9 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
@@ -32,7 +30,7 @@
         <Menu text="Действия">
             <MenuItem fx:id="menuAuthorization" text="Авторизоваться"/>
             <MenuItem fx:id="menuRegistration" text="Зарегистрироваться"/>
-            <MenuItem fx:id="menuList" text="Показать онлайн"/>
+            <Menu fx:id="menuList" text="Показать онлайн"/>
             <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat" accelerator="Esc"/>
         </Menu>
         <Menu text="Настройки">

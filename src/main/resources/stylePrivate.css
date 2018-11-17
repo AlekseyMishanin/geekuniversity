@@ -1,0 +1,23 @@
+#btn{
+     -fx-background-color: transparent;
+}
+#textField{
+    -fx-background-color: transparent;
+}
+.list-view {
+    -fx-background-color: transparent;
+}
+.list-view .virtual-flow .clipped-container .cell.indexed-cell.list-cell{
+    -fx-background-color: transparent;
+}
+.label{
+    -fx-font-size: 11;
+    -fx-wrap-text: true;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: dashed;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 0 5;
+    -fx-background-color: #f0f8ff;
+}
