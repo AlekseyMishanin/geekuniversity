@@ -12,8 +12,10 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
 <BorderPane fx:id="borderpane"
-            fx:controller="javacoreadvanced.lesson4.controller.Controller"
+            fx:controller="javacoreadvanced.lesson4.client.controller.Controller"
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="@/style.css">
 <padding>
@@ -42,23 +44,23 @@
 <center>
     <VBox alignment="CENTER" spacing="3" BorderPane.alignment="CENTER">
         <children>
-            <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS" prefWidth="Infinity">
+            <HBox fx:id="authBox" visible="true" managed="true">
                 <padding>
-                    <Insets left="0" right="0" top="10" bottom="10"></Insets>
+                    <Insets left="20"></Insets>
                 </padding>
-                <ScrollPane fx:id="scrollpane" styleClass="edge-to-edge" VBox.vgrow="ALWAYS" pannable="true">
-                    <VBox fx:id="vbox" spacing="3" VBox.vgrow="ALWAYS">
-                        <padding>
-                            <Insets left="15" right="15" top="15" bottom="15"></Insets>
-                        </padding>
-                    </VBox>
-                </ScrollPane>
-            </StackPane>
-          <HBox fx:id="chatBox" visible="true" managed="true">
-              <TextField fx:id="textField" onAction="#sendWsg" HBox.hgrow="ALWAYS" promptText="Введите сообщение..." ></TextField>
-              <Button onAction="#sendWsg"  fx:id="btn1" prefWidth="40"></Button>
-          </HBox>
-          <ImageView fx:id="gif" visible="false" managed="false"></ImageView>
+                <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="Логин" ></TextField>
+                <PasswordField fx:id="passField" promptText="Пароль" onAction="#tryToAuth"></PasswordField>
+                <Button onAction="#tryToAuth"  fx:id="btnAuth" prefWidth="40" text="OK"></Button>
+            </HBox>
+            <ListView fx:id="listchat"></ListView>
+              <HBox fx:id="chatBox" visible="false" managed="false">
+                  <padding>
+                      <Insets left="20"></Insets>
+                  </padding>
+                  <TextField fx:id="textField" onAction="#sendWsg" HBox.hgrow="ALWAYS" promptText="Введите сообщение..." ></TextField>
+                  <Button onAction="#sendWsg"  fx:id="btn1" prefWidth="40"></Button>
+              </HBox>
+              <ImageView fx:id="gif" visible="false" managed="false"></ImageView>
         </children>
     </VBox>
 </center>
