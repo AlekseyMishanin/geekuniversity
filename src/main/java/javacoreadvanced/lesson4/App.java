@@ -1,11 +1,12 @@
 package javacoreadvanced.lesson4;
 
+import javacoreadvanced.lesson4.config.MyMouseConfig;
+import javacoreadvanced.lesson4.service.MyEventHandlerDragged;
+import javacoreadvanced.lesson4.service.MyEventHandlerPressed;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.util.Objects;
@@ -16,8 +17,6 @@ import java.util.Objects;
  * */
 public class App extends Application{
 
-    private double xOffset;
-    private double yOffset;
     private Parent root;
     private Scene scene;
 
@@ -29,20 +28,9 @@ public class App extends Application{
         primaryStage.initStyle(StageStyle.UNDECORATED);
         scene = new Scene(root, 550, 575);
         primaryStage.setScene(scene);
-        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                xOffset = primaryStage.getX() - event.getScreenX();
-                yOffset = primaryStage.getY() - event.getScreenY();
-            }
-        });
-        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                primaryStage.setX(event.getScreenX() + xOffset);
-                primaryStage.setY(event.getScreenY() + yOffset);
-            }
-        });
+        MyMouseConfig mouseconf = new MyMouseConfig(primaryStage);
+        scene.setOnMousePressed(new MyEventHandlerPressed(mouseconf));
+        scene.setOnMouseDragged(new MyEventHandlerDragged(mouseconf));
         primaryStage.show();
     }
 

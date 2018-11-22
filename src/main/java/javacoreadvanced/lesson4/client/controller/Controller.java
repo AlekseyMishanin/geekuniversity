@@ -1,7 +1,10 @@
 package javacoreadvanced.lesson4.client.controller;
 
 import javacoreadvanced.lesson4.bot.Bot;
+import javacoreadvanced.lesson4.client.privatewindow.PrivateWindow;
 import javacoreadvanced.lesson4.config.Configurate;
+import javacoreadvanced.lesson4.model.TypePerson;
+import javacoreadvanced.lesson4.service.MyMenuItem;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,13 +26,17 @@ import javazoom.jl.player.Player;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
- * Class Controller
+ * Class Controller. Класс наследуется от Observable, т.е. является наблюдаемым. Это необходимо, чтобы отлавливать
+ * момент приема нового сообщения от сервера и уведомлять об этом окна с приватным чатом.
+ * В соответствии с логикой работы между сервером и клиентом устанавливается 1 соединение (создается один сокет), чтобы
+ * не плодить соединения при создании приватных чатов была выбрана модель наблюдатель-наблюдаемый при создании приватного
+ * чата.
  * @author Mishanin Aleksey
  * */
-public class Controller {
+public class Controller extends Observable {
 
     @FXML Button btn1;
     @FXML Button btnAuth;
@@ -43,8 +50,8 @@ public class Controller {
     @FXML ListView<HBox> listchat;
     @FXML HBox authBox;
     @FXML HBox chatBox;
+    @FXML Menu menuList;
 
-    private enum TypePerson {FIRSTPERSON, SECONDPERSON, SYSTEMPERSON}
     private Image youImageAvatar;           //изображение используемое в качестве аватара
     final private Image avatarSecondPerson = new Image("ava6.jpg",20,20,true,true); //изображение используемое в качестве аватара
     final private Image avatarSystemPerson = new Image("ava4.jpg",20,20,true,true); //изображение используемое в качестве аватара
@@ -57,14 +64,20 @@ public class Controller {
     private boolean authorise = false;
     private String nick = null;
 
-    public void connect() {
+    public PrintWriter getOut() {return out;}
+    public String getNick() {return nick;}
 
-        youImageAvatar = new Image("ava5.jpg",20,20,true,true);     //по url загружаем изображение
+    public void connect() {
+        //по url загружаем изображение
+        youImageAvatar = new Image("ava5.jpg",20,20,true,true);
+        //подгружаем в конфигурации хост и порт
         Configurate.initialise();
         try {
             socket = new Socket(Configurate.getInetAddress().getHostName(),Configurate.getPort());
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //запускаем задание разрывающее соедниение с неавторизованным пользователем
+            timeout();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -84,15 +97,33 @@ public class Controller {
                         }
                         while (true){
                             String str = in.readLine();
-                            if(str.equals("/serverClose")) break;
-                            if(str.startsWith(nick)) {createLabelForChat(str,TypePerson.FIRSTPERSON);}
-                            else {
-                                if(str.startsWith("/system ")) {
+                            //поступила новая порция данных вызываем метод, подтверждающий факт изменения
+                            setChanged();
+                            //уведомляем наблюдателей об изменении наблюдаемого объекта
+                            notifyObservers(str);
+                            if(str.equals("/serverClose")) {break;}
+                            else if(str.startsWith("/clientlist ")){
+                                String[] tokens = str.split(" ");
+                                Platform.runLater(()->{
+                                    //очищаем в меню список пользователей
+                                    menuList.getItems().clear();
+                                    for (int i = 1; i < tokens.length; i++) {
+                                        //создаем модифицированный объект MyMenuItem
+                                        MyMenuItem mItem = new MyMenuItem(tokens[i],Controller.this);
+                                        //загружаем в меню новый списко пользователей
+                                        menuList.getItems().add(mItem);
+                                    }
+                                });
+                            }
+                            //если отправлено сообщение от лица 1-го пользователя всем или в личку
+                            else if(str.startsWith(nick)||str.startsWith("to ")) {createLabelForChat(str,TypePerson.FIRSTPERSON);}
+                            //если отправлено сообщение от лица системного пользователя
+                            else if(str.startsWith("/system ")) {
                                     String[] tokens = str.split(" ", 2);
                                     createLabelForChat(tokens[1], TypePerson.SYSTEMPERSON);
                                 }
+                            //если отправлено сообщение от лица собеседника 1-го пользователя
                                 else {createLabelForChat(str,TypePerson.SECONDPERSON);}
-                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -173,6 +204,16 @@ public class Controller {
         }
         //показать анимацию
         playAnimation(lHbox);
+        //определяем текущую дату
+        GregorianCalendar calendar = new GregorianCalendar();
+        String data = calendar.get(Calendar.DATE) + "."
+                + (calendar.get(Calendar.MONTH)+1) + "."
+                + calendar.get(Calendar.YEAR) + " "
+                + calendar.get(Calendar.HOUR) + ":"
+                + calendar.get(Calendar.MINUTE) + ":"
+                + calendar.get(Calendar.SECOND);
+        //добавляем дату в качестве подсказки
+        label.setTooltip(new Tooltip(data));
         Platform.runLater(() -> {listchat.getItems().add(lHbox); listchat.scrollTo(listchat.getItems().size()-1);});
 
     }
@@ -259,10 +300,31 @@ public class Controller {
         }
     }
 
+    /**
+     * Метод реализует попытку авторизации пользователя.
+     * */
     public void tryToAuth(ActionEvent actionEvent) {
         if(socket==null||socket.isClosed()) connect();
         out.println("/auth " + loginField.getText() + " " + passField.getText());
         loginField.clear();
         passField.clear();
+    }
+
+    /**
+     * Метод запускает задание закрывающее сокет с неавторизованным пользователем по прошествии опр.времени
+     * */
+    private void timeout(){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(!authorise&&!socket.isClosed()){
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 120000);
     }
 }

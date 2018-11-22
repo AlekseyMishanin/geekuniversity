@@ -1,4 +1,6 @@
-package javacoreadvanced.lesson4.server;
+package javacoreadvanced.lesson4;
+
+import javacoreadvanced.lesson4.server.Server;
 
 public class ServerApp {
     public static void main(String[] args) {
