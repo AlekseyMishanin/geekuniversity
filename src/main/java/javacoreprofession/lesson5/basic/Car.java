@@ -9,7 +9,6 @@ public class Car implements Runnable {
     private static int CARS_COUNT;
     private static CountDownLatch LATCHSTART;
     private static AtomicBoolean BOOl;
-    private static Lock lock;
     static {
         CARS_COUNT = 0;
     }
@@ -28,7 +27,6 @@ public class Car implements Runnable {
         CARS_COUNT++;
         LATCHSTART = new CountDownLatch(CARS_COUNT+1);
         BOOl = new AtomicBoolean(false);
-        lock = new ReentrantLock();
         this.name = "Участник #" + CARS_COUNT;
     }
     @Override
