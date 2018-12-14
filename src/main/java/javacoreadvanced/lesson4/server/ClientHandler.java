@@ -1,5 +1,9 @@
 package javacoreadvanced.lesson4.server;
 
+import javacoreadvanced.lesson4.config.Configurate;
+import javacoreadvanced.lesson4.exception.LoginExistsException;
+import javacoreadvanced.lesson4.exception.NickExistsException;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Iterator;
@@ -38,7 +42,20 @@ public class ClientHandler implements Runnable{
             //цикл авторизации
             while (true){
                 String str = in.readLine();
-                if(str.startsWith("/auth")){
+                if(str.startsWith("/registration ")){
+                    String[] tokens = str.split(" ");
+                    try {
+                        server.getAuthService().addUser(tokens[1], tokens[2], tokens[3]);
+                        nick = tokens[1];
+                        sendMessage("/regok " + nick);
+                        blacklist = server.getAuthService().getBlackList(nick);
+                        server.subcribe(this);
+                        break;
+                    } catch (NickExistsException|LoginExistsException e) {
+                        sendMessage("/system " + e.getMessage());
+                    }
+                }
+                if(str.startsWith("/auth ")){
                     String[] tokens = str.split(" ");
                     String nickname = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
                     if(nickname!=null) {

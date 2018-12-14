@@ -1,7 +1,6 @@
 package javacoreadvanced.lesson4.client.controller;
 
 import javacoreadvanced.lesson4.bot.Bot;
-import javacoreadvanced.lesson4.client.privatewindow.PrivateWindow;
 import javacoreadvanced.lesson4.config.Configurate;
 import javacoreadvanced.lesson4.model.TypePerson;
 import javacoreadvanced.lesson4.service.MyMenuItem;
@@ -9,7 +8,6 @@ import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -25,7 +23,6 @@ import javazoom.jl.player.Player;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -40,15 +37,20 @@ public class Controller extends Observable {
 
     @FXML Button btn1;
     @FXML Button btnAuth;
+    @FXML Button btnReg;
     @FXML TextField textField;
     @FXML TextField loginField;
+    @FXML TextField nickFieldReg;
+    @FXML TextField loginFieldReg;
     @FXML PasswordField passField;
+    @FXML PasswordField passFieldReg;
     @FXML ImageView gif;
     @FXML Pane paneImage;
     @FXML CheckMenuItem menuSound;
     @FXML CheckMenuItem menuAnimation;
     @FXML ListView<HBox> listchat;
     @FXML HBox authBox;
+    @FXML VBox regBox;
     @FXML HBox chatBox;
     @FXML Menu menuList;
 
@@ -64,6 +66,7 @@ public class Controller extends Observable {
     private boolean authorise = false;
     private String nick = null;
 
+    public boolean isAuthorise() {return authorise;}
     public PrintWriter getOut() {return out;}
     public String getNick() {return nick;}
 
@@ -84,10 +87,20 @@ public class Controller extends Observable {
                     try {
                         while (true){
                             String str = in.readLine();
-                            if(str.startsWith("/authok")) {
+                            if(str.startsWith("/regok ")) {
                                 String[] tokens = str.split(" ");
                                 nick = tokens[1];
                                 setAuthorise(true);
+                                createLabelForChat("Registration successful", TypePerson.SYSTEMPERSON);
+                                Configurate.getLOGGER().info(nick + ". Registration successful");
+                                break;
+                            }
+                            if(str.startsWith("/authok ")) {
+                                String[] tokens = str.split(" ");
+                                nick = tokens[1];
+                                setAuthorise(true);
+                                createLabelForChat("Authentication is successful", TypePerson.SYSTEMPERSON);
+                                Configurate.getLOGGER().info(nick + ". Authentication successful");
                                 break;
                             }
                             if(str.startsWith("/system ")) {
@@ -134,11 +147,13 @@ public class Controller extends Observable {
                             e.printStackTrace();
                         }
                         setAuthorise(false);
+                        Configurate.getLOGGER().info(nick + ". Exit program");
                     }
                 }
             }).start();
         } catch (IOException e) {
             e.printStackTrace();
+            Configurate.getLOGGER().error(nick + ". Exit program");
         }
     }
 
@@ -283,13 +298,15 @@ public class Controller extends Observable {
     /**
      * Метод реализует завершение работы приложения.
      * */
-    public void closeChat(){Runtime.getRuntime().exit(0);}
+    public void closeChat(){Configurate.getLOGGER().info(nick + ". Exit program"); Runtime.getRuntime().exit(0);}
 
     public void setAuthorise(boolean isAuthorise){
         this.authorise = isAuthorise;
         if(authorise){
             authBox.setVisible(false);
             authBox.setManaged(false);
+            regBox.setVisible(false);
+            regBox.setManaged(false);
             chatBox.setVisible(true);
             chatBox.setManaged(true);
         } else {
@@ -311,6 +328,21 @@ public class Controller extends Observable {
     }
 
     /**
+     * Метод реализует попытку регистрации пользователя.
+     * */
+    public void tryToReg(ActionEvent actionEvent) {
+        if(socket==null||socket.isClosed()) connect();
+        if(!nickFieldReg.getText().isEmpty()&&!loginFieldReg.getText().isEmpty()&&!passFieldReg.getText().isEmpty()){
+            out.println("/registration " + nickFieldReg.getText() + " " + loginFieldReg.getText() + " " + passFieldReg.getText());
+        } else{
+            createLabelForChat("The key field is not filled", TypePerson.SYSTEMPERSON);
+        }
+        nickFieldReg.clear();
+        loginFieldReg.clear();
+        passFieldReg.clear();
+    }
+
+    /**
      * Метод запускает задание закрывающее сокет с неавторизованным пользователем по прошествии опр.времени
      * */
     private void timeout(){
@@ -326,5 +358,39 @@ public class Controller extends Observable {
                 }
             }
         }, 120000);
+    }
+
+    /**
+     * Если пользователь не авторизован пользьватель выводит поля для авторизации
+     * */
+    public void getAuth(ActionEvent actionEvent) {
+        if(!isAuthorise()){
+            if(!authBox.isVisible()){
+                authBox.setVisible(true);
+                authBox.setManaged(true);
+                regBox.setVisible(false);
+                regBox.setManaged(false);
+            } else {
+                authBox.setVisible(false);
+                authBox.setManaged(false);
+            }
+        }
+    }
+
+    /**
+     * Если пользователь не авторизован пользьватель выводит поля для регистрации
+     * */
+    public void getReg(ActionEvent actionEvent) {
+        if(!isAuthorise()){
+            if(!regBox.isVisible()){
+                authBox.setVisible(false);
+                authBox.setManaged(false);
+                regBox.setVisible(true);
+                regBox.setManaged(true);
+            } else {
+                authBox.setVisible(false);
+                authBox.setManaged(false);
+            }
+        }
     }
 }

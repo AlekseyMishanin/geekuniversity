@@ -28,8 +28,8 @@
 <top>
     <MenuBar fx:id="menuBar">
         <Menu text="Действия">
-            <MenuItem fx:id="menuAuthorization" text="Авторизоваться"/>
-            <MenuItem fx:id="menuRegistration" text="Зарегистрироваться"/>
+            <MenuItem fx:id="menuAuthorization" text="Авторизоваться" onAction="#getAuth"/>
+            <MenuItem fx:id="menuRegistration" text="Зарегистрироваться" onAction="#getReg"/>
             <Menu fx:id="menuList" text="Показать онлайн"/>
             <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat" accelerator="Esc"/>
         </Menu>
@@ -50,6 +50,17 @@
                 <PasswordField fx:id="passField" promptText="Пароль" onAction="#tryToAuth"></PasswordField>
                 <Button onAction="#tryToAuth"  fx:id="btnAuth" prefWidth="40" text="OK"></Button>
             </HBox>
+            <VBox fx:id="regBox" visible="false" managed="false" alignment="CENTER">
+                <padding>
+                    <Insets left="20"></Insets>
+                </padding>
+                <HBox>
+                    <TextField fx:id="nickFieldReg" HBox.hgrow="ALWAYS" promptText="Ник" ></TextField>
+                    <TextField fx:id="loginFieldReg" HBox.hgrow="ALWAYS" promptText="Логин" ></TextField>
+                    <PasswordField fx:id="passFieldReg" promptText="Пароль" onAction="#tryToReg"></PasswordField>
+                </HBox>
+                <Button onAction="#tryToReg"  fx:id="btnReg" text="Зарегистрироваться"></Button>
+            </VBox>
             <ListView fx:id="listchat"></ListView>
               <HBox fx:id="chatBox" visible="false" managed="false">
                   <padding>

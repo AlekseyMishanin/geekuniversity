@@ -4,7 +4,7 @@ import java.util.concurrent.Semaphore;
 
 public class Tunnel extends Stage {
 
-    private static Semaphore SEMAPHORE;
+    private Semaphore SEMAPHORE;
     public Tunnel() {
         this.length = 80;
         this.description = "Тоннель " + length + " метров";
