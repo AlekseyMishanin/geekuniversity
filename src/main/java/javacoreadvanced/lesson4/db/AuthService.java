@@ -1,5 +1,8 @@
 package javacoreadvanced.lesson4.db;
 
+import javacoreadvanced.lesson4.exception.LoginExistsException;
+import javacoreadvanced.lesson4.exception.NickExistsException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -65,7 +68,33 @@ public class AuthService extends DB_mysql{
         return res;
     }
 
-    public void addUser(String login, String pass, String nick){
+    private void checkNick(final String nick) throws NickExistsException {
+        String sql = String.format("SELECT nick FROM chat.user WHERE nick ='%s'", nick);
+        try {
+            ResultSet res = statement.executeQuery(sql);
+            if(res.next()){
+                throw new NickExistsException(res.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkLogin(final String login) throws LoginExistsException {
+        String sql = String.format("SELECT login FROM chat.user WHERE login ='%s'", login);
+        try {
+            ResultSet res = statement.executeQuery(sql);
+            if(res.next()){
+                throw new LoginExistsException(res.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addUser(final String nick, final String login, final String pass) throws NickExistsException, LoginExistsException {
+        checkNick(nick);
+        checkLogin(login);
         String sql = String.format("INSERT INTO `chat`.`user` (`login`, `nick`, `password`) VALUES ('%s', '%s', '%s')", login,nick,pass.hashCode());
         try {
             statement.execute(sql);

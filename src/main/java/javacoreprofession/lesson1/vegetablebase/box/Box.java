@@ -1,8 +1,8 @@
 package javacoreprofession.lesson1.vegetablebase.box;
 
-import com.sun.istack.internal.NotNull;
 import javacoreprofession.lesson1.vegetablebase.fruit.Fruit;
 import javacoreprofession.lesson1.vegetablebase.inter.BoxActions;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class Box<T extends Fruit> implements BoxActions<T> {
         size=0;
     }
 
-    public Box(@NotNull final T... box){
+    public Box(@NonNull final T... box){
         this();
         this.box.addAll(Arrays.asList(box));
         size = this.box.size();
@@ -42,7 +42,7 @@ public class Box<T extends Fruit> implements BoxActions<T> {
      * Метод добавляет один фрукт в коробку
      * */
     @Override
-    public boolean add(@NotNull final T value) {
+    public boolean add(@NonNull final T value) {
         this.box.add(value);
         ++size;
         return true;
@@ -53,7 +53,7 @@ public class Box<T extends Fruit> implements BoxActions<T> {
      * аргумент очищается.
      * */
     @Override
-    public boolean pour(@NotNull final Box<T> value) {
+    public boolean pour(@NonNull final Box<T> value) {
         this.box.addAll(value.getBox());
         size=this.box.size();
         value.clear();
@@ -65,7 +65,7 @@ public class Box<T extends Fruit> implements BoxActions<T> {
      * @param o1 - первая коробка
      * @param o2 - вторая коробка
      * */
-    public static<T extends Fruit> boolean compare(@NotNull final Box<?> o1, @NotNull final Box<?> o2) {
+    public static<T extends Fruit> boolean compare(@NonNull final Box<?> o1, @NonNull final Box<?> o2) {
         return o1.getWeight()==o2.getWeight();
     }
 
