@@ -9,7 +9,7 @@ public class Main {
 
     private final Object obj = new Object();
     private final int size = 5;
-    private volatile int aByte = 0b01000001;
+    private volatile char ch = 'A';
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -22,12 +22,12 @@ public class Main {
         synchronized (this){
             try{
                 for (int i = 0; i < size; i++) {
-                    while(aByte!=0b01000001){
+                    while(ch!='A'){
                         wait();
                     }
-                    System.out.print((char)aByte);
+                    System.out.print(ch);
                     Thread.sleep(500);
-                    aByte=aByte+1;
+                    ch='B';
                     notifyAll();
                 }
             } catch (InterruptedException e){
@@ -40,12 +40,12 @@ public class Main {
         synchronized (this){
             try{
                 for (int i = 0; i < size; i++) {
-                    while(aByte!=0b01000010){
+                    while(ch!='B'){
                         wait();
                     }
-                    System.out.print((char)aByte);
+                    System.out.print(ch);
                     Thread.sleep(500);
-                    aByte=aByte+1;
+                    ch='C';
                     notifyAll();
                 }
             } catch (InterruptedException e){
@@ -58,12 +58,12 @@ public class Main {
         synchronized (this){
             try{
                 for (int i = 0; i < size; i++) {
-                    while(aByte!=0b01000011){
+                    while(ch!='C'){
                         wait();
                     }
-                    System.out.print((char)aByte);
+                    System.out.print(ch);
                     Thread.sleep(500);
-                    aByte=aByte-2;
+                    ch='A';
                     notifyAll();
                 }
             } catch (InterruptedException e){

@@ -17,12 +17,12 @@ public class MyClassLoader extends ClassLoader {
 
         File file = new File(name);
         if(!file.isFile()) throw new ClassNotFoundException("Нет такого класса " + name);
-
+        System.out.println(file.getAbsolutePath());
         try(InputStream inputStream = new BufferedInputStream(new FileInputStream(file))){
             byte[]b = new byte[(int)file.length()];
             inputStream.read(b);
             int index = file.getName().lastIndexOf(".class");
-            Class c = defineClass(file.getName().substring(0,index), b, 0, b.length);
+            Class c = defineClass("javacoreprofession.lesson7.additional.first."+file.getName().substring(0,index), b, 0, b.length);
             return c;
         }catch (Exception e){
             e.printStackTrace();
