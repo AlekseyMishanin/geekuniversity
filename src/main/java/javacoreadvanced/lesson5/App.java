@@ -37,9 +37,13 @@ arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math
 Для второго метода замеряете время разбивки массива на 2, просчета каждого из двух массивов и склейки.
 */
 
+import javacoreadvanced.lesson5.array.ForkArray;
 import javacoreadvanced.lesson5.array.MultithreadedArray;
 import javacoreadvanced.lesson5.array.SimpleArray;
 import javacoreadvanced.lesson5.config.Configuratoin;
+
+import java.util.Arrays;
+import java.util.concurrent.ForkJoinPool;
 
 public class App {
     public static void main(String[] args) {
@@ -53,5 +57,14 @@ public class App {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        final long a = System.currentTimeMillis();
+        ForkJoinPool fjp = new ForkJoinPool();
+        double[] data = new double[conf.getSize()];
+        Arrays.fill(data,1);
+        ForkArray task = new ForkArray(data, 0, conf.getSize());
+        fjp.invoke(task);
+        final long b = System.currentTimeMillis();
+        System.out.println(b-a);
     }
 }

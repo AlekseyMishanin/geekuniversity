@@ -4,6 +4,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Аннотация помечает тестовый метод. Аннотация содержит параметр priority определяющий приоритет выполнения
@@ -15,3 +17,4 @@ import java.lang.annotation.Target;
 public @interface Test {
     int priority() default 5;
 }
+
