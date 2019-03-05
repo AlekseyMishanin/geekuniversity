@@ -26,7 +26,6 @@ public class Test {
 
         testSectionSort();
         testInsertionSort();
-
     }
 
     /**

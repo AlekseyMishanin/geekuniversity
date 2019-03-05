@@ -15,10 +15,29 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Test ts = new Test();
+        /*Test ts = new Test();
         for (int i = 0; i < 15; i++) {
             ts.test();
         }
-        System.out.println(ts);
+        System.out.println(ts);*/
+
+        ArrayListDemo<Character> arr = new ArrayListDemo<>(Character.class);
+        arr.add('w');
+        arr.add('t');
+        arr.add('y');
+        arr.add('b');
+        arr.add('d');
+        arr.add('f');
+        arr.add('k');
+        arr.add('z');
+        arr.add('i');
+        arr.add('p');
+        arr.add('o');
+        arr.add('m');
+        arr.add('e');
+        arr.add('b');
+        System.out.println(arr);
+        arr.quickSort(0,arr.size()-1,Character::compareTo);
+        System.out.println(arr);
     }
 }

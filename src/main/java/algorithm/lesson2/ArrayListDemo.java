@@ -144,6 +144,9 @@ public class ArrayListDemo<T> implements Iterable<T>{
         return new MyIterator();
     }
 
+    /**
+     * Внутренний класс реализующий интерфейс Iterator
+     * */
     private class MyIterator implements Iterator<T>{
 
         private int cursor = 0;
@@ -162,12 +165,18 @@ public class ArrayListDemo<T> implements Iterable<T>{
         }
     }
 
+    /**
+     * Метод перестановки двух элементов местами
+     * */
     private void exch(int x, int y){
         T temp = array[x];
         array[x]=array[y];
         array[y]=temp;
     }
 
+    /**
+     * Метод сравнения двух элементов
+     * */
     private boolean less(T a, T b, Comparator<T> cmp){
         return cmp.compare(a,b)<0;
     }
@@ -202,7 +211,47 @@ public class ArrayListDemo<T> implements Iterable<T>{
                 }
             }
         }
-        
+    }
+
+    /**
+     * Метод сортировки методом вставки для заданного отрезка
+     * @param cmp - компаратор для сравления двух элементов
+     * */
+    private void insertionSort(int left, int right, Comparator<T> cmp){
+        for (int i = left; i < right; i++) {
+            for (int j = i; j > left; j--) {
+                if(less(array[j],array[j-1],cmp)){
+                    exch(j,j-1);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Метод сортировки Шелла
+     * */
+    public void shellSort(Comparator<T> cmp){
+        int inner = 0, outer = 0;
+        T temp;
+        int h = 1;
+
+        //определение интервальных последовательностей при помощи уравнение Кнута
+        while(h<=size/3) h = 3*h + 1;
+
+        while (h>0){
+            for (outer = h;  outer<size ; outer++) {
+                temp = array[outer];
+                inner=outer;
+                while(inner>h-1&&less(temp, array[inner-h], cmp)){
+                    array[inner] = array[inner-h];
+                    inner -= h;
+                }
+                array[inner] = temp;
+            }
+            h = (h -1)/3;
+        }
     }
 
     /**
@@ -223,4 +272,55 @@ public class ArrayListDemo<T> implements Iterable<T>{
         }
         return false;
     }
+
+    /**
+     * Метод быстрой сортировки
+     * */
+    public void quickSort(int left, int right, Comparator<T> cmp){
+
+        int size = right - left + 1;
+        if(size<=9){
+            insertionSort(left,right, cmp);
+        } else {
+            T median = medianOf3(left,right, cmp);
+            int partition = partition(left,right,median,cmp);
+            quickSort(left,partition-1,cmp);
+            quickSort(partition+1,right,cmp);
+        }
+    }
+
+    /**
+     * Метод определения медианы по трем точкам
+     * */
+    private T medianOf3(int left, int right, Comparator<T> cmp){
+
+        int center = left + (right-left)/2;
+        if(less(array[center],array[left],cmp)) exch(center,left);      //значение центрального элемента меньше левого
+        if(less(array[right],array[left],cmp)) exch(right,left);        //значение правого элемента меньше левого
+        if(less(array[right],array[center],cmp)) exch(center,right);    //значение правого элмента меньше центрального
+        exch(center, right-1); //перемещаем опорный элемент на правый край
+        return array[right-1];
+    }
+
+    /**
+     * Метод разбиения массива на две группы: слева с меньшими ключами, справа с большими ключами
+     * */
+    private int partition(int left, int right, T pivot, Comparator<T> cmp){
+
+        int leftPtr = left;
+        int rightPrt = right - 1;
+
+        while (true){
+            while (less(array[++leftPtr],pivot,cmp));   //поиск в левом подмножестве элемента большего чем опорный
+            while (less(pivot,array[--rightPrt],cmp));  //поиск в правом подмножестве элемента меньше чем опорный
+            if(rightPrt<=leftPtr) {
+                break;                                  //если указатели сошлись разбиение окончено
+            } else {
+                exch(leftPtr,rightPrt);                 //в противном случае меняем элементы местами
+            }
+        }
+        exch(leftPtr,right-1);                      //восстанавливаем положение опорного элемента
+        return leftPtr;
+    }
+
 }

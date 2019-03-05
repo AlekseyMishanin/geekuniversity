@@ -12,7 +12,7 @@ public class MyEventHandlerPressed implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-        myMouseConfig.setXOffset(myMouseConfig.getStage().getX() - event.getScreenX());
-        myMouseConfig.setYOffset(myMouseConfig.getStage().getY() - event.getScreenY());
+        myMouseConfig.setxOffset(myMouseConfig.getStage().getX() - event.getScreenX());
+        myMouseConfig.setyOffset(myMouseConfig.getStage().getY() - event.getScreenY());
     }
 }

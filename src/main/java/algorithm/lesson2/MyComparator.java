@@ -2,6 +2,9 @@ package algorithm.lesson2;
 
 import java.util.Comparator;
 
+/**
+ * Класс реализует интерфейс Comparator
+ * */
 public class MyComparator implements Comparator<Character> {
 
     @Override

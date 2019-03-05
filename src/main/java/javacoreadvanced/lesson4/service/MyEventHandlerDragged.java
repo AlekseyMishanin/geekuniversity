@@ -12,7 +12,7 @@ public class MyEventHandlerDragged implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-        myMouseConfig.getStage().setX(event.getScreenX() + myMouseConfig.getXOffset());
-        myMouseConfig.getStage().setY(event.getScreenY() + myMouseConfig.getYOffset());
+        myMouseConfig.getStage().setX(event.getScreenX() + myMouseConfig.getxOffset());
+        myMouseConfig.getStage().setY(event.getScreenY() + myMouseConfig.getyOffset());
     }
 }

@@ -17,4 +17,24 @@ public class MyMouseConfig {
     protected double yOffset;
 
     public MyMouseConfig(Stage stage){this.stage = stage;}
+
+    public double getxOffset() {
+        return xOffset;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setxOffset(double xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    public double getyOffset() {
+        return yOffset;
+    }
+
+    public void setyOffset(double yOffset) {
+        this.yOffset = yOffset;
+    }
 }
