@@ -20,7 +20,8 @@ public class MyDequeArr<T> {
      * */
     public MyDequeArr(Class cl) {
         this.cl=cl;
-        size = start = end = 0;
+        size = start = 0;
+        end = -1;
         array = (T[]) Array.newInstance(cl,1);
     }
 
@@ -34,13 +35,13 @@ public class MyDequeArr<T> {
 
     private void resize(int capacity){
 
-        T[] temp = (T[])Array.newInstance(cl,size*2);
+        T[] temp = (T[])Array.newInstance(cl,capacity);
         for (int i = 0; i < size; i++) {
             temp[i] = array[(start + i)%array.length];
         }
         array = temp;
         start = 0;
-        end = size;
+        end = size-1;
     }
 
     /**
@@ -66,7 +67,7 @@ public class MyDequeArr<T> {
         if(size == array.length){
             resize(size * 2);
         }
-        array[end++] = value;
+        array[++end] = value;
         end %= array.length;
         size++;
     }
@@ -118,7 +119,8 @@ public class MyDequeArr<T> {
         if(isEmpty()){
             throw new NoSuchElementException("Deque is empty");
         }
-        T item = array[end--];
+        T item = array[end];
+        end--;
         size--;
         if(end<0) end = array.length-1;
         if(size == array.length / 4 && size > 0){
@@ -131,13 +133,12 @@ public class MyDequeArr<T> {
     public String toString() {
 
         StringBuilder str = new StringBuilder();
+        str.append("[");
         for (int i = 0; i < size; i++) {
-            if(i==0) {str.append("[");}
             str.append(array[(i+start)%array.length].toString());
             if(i!=size-1) {str.append(", ");}
-            if(i==size-1) {str.append("]");}
-
         }
+        str.append("]");
         return str.toString();
     }
 }

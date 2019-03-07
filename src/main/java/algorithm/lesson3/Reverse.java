@@ -1,5 +1,7 @@
 package algorithm.lesson3;
 
+import lombok.NonNull;
+
 /**
  * Класс содержит ряд методов переворачивающих строку
  * */
@@ -9,7 +11,7 @@ public class Reverse {
      * Метод переворачивает строку при помощи стека
      * @param str - исходная строка
      * */
-    public static  <T extends CharSequence> String reverse1(T str){
+    public static  <T extends CharSequence> String reverse1(@NonNull T str){
 
         StringBuilder stringBuilder = new StringBuilder();
         MyStackArr<Character> stack = new MyStackArr<>(Character.class);
@@ -26,7 +28,7 @@ public class Reverse {
      * Метод переворачивает строку при помощи очереди
      * @param str - исходная строка
      * */
-    public static  <T extends CharSequence> String reverse2(T str){
+    public static  <T extends CharSequence> String reverse2(@NonNull T str){
 
         StringBuilder stringBuilder = new StringBuilder();
         MyQueueArr<Character> queue = new MyQueueArr<>(Character.class);
@@ -43,7 +45,7 @@ public class Reverse {
      * Метод переворачивает строку при помощи битовой операции XOR (позаимствовано на одном из блогов GB)
      * @param str - исходная строка
      * */
-    public static  <T extends CharSequence> String reverse3 (T str){
+    public static  <T extends CharSequence> String reverse3 (@NonNull T str){
 
         char[] chars = new char[str.length()];
         for (int i = 0; i < str.length(); i++) {
