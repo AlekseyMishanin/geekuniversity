@@ -83,7 +83,7 @@ public class ArrayListDemo<T> implements Iterable<T>{
      * @return int - номер элемента если найден или -1
      * */
     public int indexOf(T value){
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < size; i++) {
             if(array[i].equals(value)) return i;
         }
         return -1;
@@ -95,7 +95,7 @@ public class ArrayListDemo<T> implements Iterable<T>{
      * @return: true - элемент найден, false - элемент не найден
      * */
     public boolean contains(T value){
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < size; i++) {
             if(array[i].equals(value)) return true;
         }
         return false;
@@ -218,7 +218,7 @@ public class ArrayListDemo<T> implements Iterable<T>{
      * @param cmp - компаратор для сравления двух элементов
      * */
     private void insertionSort(int left, int right, Comparator<T> cmp){
-        for (int i = left; i < right; i++) {
+        for (int i = left; i <= right; i++) {
             for (int j = i; j > left; j--) {
                 if(less(array[j],array[j-1],cmp)){
                     exch(j,j-1);

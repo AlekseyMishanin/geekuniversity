@@ -1,4 +1,4 @@
-package algorithm.lesson2.base;
+package algorithm.lesson3.base;
 
 import algorithm.lesson3.MyDequeArr;
 import org.junit.*;
