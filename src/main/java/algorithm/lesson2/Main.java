@@ -35,7 +35,7 @@ public class Main {
         arr.add('o');
         arr.add('m');
         arr.add('e');
-        arr.add('b');
+        arr.add('a');
         System.out.println(arr);
         arr.quickSort(0,arr.size()-1,Character::compareTo);
         System.out.println(arr);
