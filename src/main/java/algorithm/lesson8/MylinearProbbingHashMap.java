@@ -100,10 +100,6 @@ public class MylinearProbbingHashMap<T, V> {
             resize(capacity * 2);
         }
 
-        if(size == capacity - 1){
-            throw new IndexOutOfBoundsException();
-        }
-
         int i;
         for (i = hash(key); items[i] != null; i = (i + 1) % capacity) {
             if(!((Node)items[i]).isEmpty() && ((T)((Node)items[i]).key).equals(key)){
