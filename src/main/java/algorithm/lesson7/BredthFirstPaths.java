@@ -109,6 +109,6 @@ public class BredthFirstPaths {
         if(dist>=marked.length){
             throw new IndexOutOfBoundsException();
         }
-        return distTo(dist);
+        return distTo[dist];
     }
 }
