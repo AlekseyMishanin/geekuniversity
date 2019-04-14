@@ -15,7 +15,7 @@ public class AuthService extends DB_mysql{
 
     public AuthService(){
         setURL("localhost", "chat", 3306);
-        connect("root", "12345");
+        connect("root", "lelybr");
     }
 
     public void connect() {

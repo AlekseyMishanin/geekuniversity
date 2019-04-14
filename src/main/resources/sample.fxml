@@ -31,6 +31,9 @@
             <MenuItem fx:id="menuAuthorization" text="Авторизоваться" onAction="#getAuth"/>
             <MenuItem fx:id="menuRegistration" text="Зарегистрироваться" onAction="#getReg"/>
             <Menu fx:id="menuList" text="Показать онлайн"/>
+            <Menu fx:id="menuFile" text="Файл" disable="true">
+                <MenuItem fx:id="menuFileSend" text="Отправить" onAction="#sendFile"/>
+            </Menu>
             <MenuItem fx:id="menuExit" text="Выход" onAction="#closeChat" accelerator="Esc"/>
         </Menu>
         <Menu text="Настройки">

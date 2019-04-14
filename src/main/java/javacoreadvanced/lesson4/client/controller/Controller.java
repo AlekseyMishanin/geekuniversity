@@ -2,6 +2,7 @@ package javacoreadvanced.lesson4.client.controller;
 
 import javacoreadvanced.lesson4.bot.Bot;
 import javacoreadvanced.lesson4.config.Configurate;
+import javacoreadvanced.lesson4.model.ProtocolFile;
 import javacoreadvanced.lesson4.model.TypePerson;
 import javacoreadvanced.lesson4.service.MyMenuItem;
 import javafx.animation.RotateTransition;
@@ -13,10 +14,12 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -35,6 +38,7 @@ import java.util.*;
  * */
 public class Controller extends Observable {
 
+    @FXML BorderPane borderpane;
     @FXML Button btn1;
     @FXML Button btnAuth;
     @FXML Button btnReg;
@@ -53,6 +57,7 @@ public class Controller extends Observable {
     @FXML VBox regBox;
     @FXML HBox chatBox;
     @FXML Menu menuList;
+    @FXML Menu menuFile;
 
     private Image youImageAvatar;           //изображение используемое в качестве аватара
     final private Image avatarSecondPerson = new Image("ava6.jpg",20,20,true,true); //изображение используемое в качестве аватара
@@ -65,6 +70,8 @@ public class Controller extends Observable {
     private BufferedReader in;
     private boolean authorise = false;
     private String nick = null;
+    private FileChooser fileChooser = new FileChooser();
+    private ProtocolFile protocolFile = new ProtocolFile();
 
     public boolean isAuthorise() {return authorise;}
     public PrintWriter getOut() {return out;}
@@ -298,7 +305,11 @@ public class Controller extends Observable {
     /**
      * Метод реализует завершение работы приложения.
      * */
-    public void closeChat(){Configurate.getLOGGER().info(nick + ". Exit program"); Runtime.getRuntime().exit(0);}
+    public void closeChat(){
+        if(nick!=null) {
+            Configurate.getLOGGER().info(nick + ". Exit program");
+        }
+        Runtime.getRuntime().exit(0);}
 
     public void setAuthorise(boolean isAuthorise){
         this.authorise = isAuthorise;
@@ -309,6 +320,7 @@ public class Controller extends Observable {
             regBox.setManaged(false);
             chatBox.setVisible(true);
             chatBox.setManaged(true);
+            menuFile.setDisable(false);
         } else {
             authBox.setVisible(true);
             authBox.setManaged(true);
@@ -391,6 +403,23 @@ public class Controller extends Observable {
                 authBox.setVisible(false);
                 authBox.setManaged(false);
             }
+        }
+    }
+
+    /**
+     * Метод отправки файла на сервер
+     * */
+    public void sendFile(ActionEvent actionEvent) {
+        File file = fileChooser.showOpenDialog(borderpane.getScene().getWindow());
+        try {
+            if (file != null){
+                out.println("/sendfile ");
+                protocolFile.write(file, socket.getOutputStream());
+            } else {
+                Configurate.getLOGGER().error("File is null");
+            }
+        } catch (IOException e) {
+            Configurate.getLOGGER().error(e.getMessage());
         }
     }
 }
