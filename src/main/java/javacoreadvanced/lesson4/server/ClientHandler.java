@@ -3,6 +3,7 @@ package javacoreadvanced.lesson4.server;
 import javacoreadvanced.lesson4.config.Configurate;
 import javacoreadvanced.lesson4.exception.LoginExistsException;
 import javacoreadvanced.lesson4.exception.NickExistsException;
+import javacoreadvanced.lesson4.model.ProtocolFile;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,6 +23,7 @@ public class ClientHandler implements Runnable{
     private Thread thread;
     private String nick;
     private Set<String> blacklist;
+    private ProtocolFile protocolFile;
 
     public ClientHandler(Server server, Socket socket) {
         try {
@@ -29,6 +31,7 @@ public class ClientHandler implements Runnable{
             this.socket = socket;
             this.out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()),4000);
+            this.protocolFile = new ProtocolFile();
             this.thread = new Thread(this);
             this.thread.start();
         } catch (IOException e) {
@@ -87,7 +90,16 @@ public class ClientHandler implements Runnable{
                     if (nick.equals(tokens[1])) continue;
                     addBlackList(tokens[1]);
                     sendMessage("/system Пользователь " + tokens[1] + " успешно добавлен в ЧС.");
-                } else{
+                } else if(str.startsWith("/sendfile ")){
+                    sendMessage("/system Загружается файл. Пожалуйста, подождите");
+                    protocolFile.isGetFile(true);
+                    try{
+                        protocolFile.read(nick,socket.getInputStream());
+                        sendMessage("/system Файл успешно загружен на сервер.");
+                    } catch (IOException e){
+                        sendMessage("/system Файл поломался по пути к серверу");
+                    }
+                } else {
                     server.broadcastMessage(this,nick + ": " + str);
                 }
             }
