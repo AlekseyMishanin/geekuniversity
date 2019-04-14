@@ -101,7 +101,7 @@ public class DepthFirstPaths {
      * */
     public LinkedList pathTo(int dist){
 
-        if(hasPathTo(dist)){
+        if(!hasPathTo(dist)){
             return null;
         }
 

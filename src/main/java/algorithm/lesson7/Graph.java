@@ -38,6 +38,7 @@ public class Graph {
         }
         adjList[a1].add(a2);
         adjList[a2].add(a1);
+        eCount++;
     }
 
     public LinkedList<Integer> adjList(int vertex){
